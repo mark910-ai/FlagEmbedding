@@ -103,7 +103,7 @@ def generate_training_data(data: List[Dict], output_path1: str, output_path2: st
             # Write immediately instead of accumulating
             if positive_data and negative_data:
                 training_sample = {
-                    "query": f"In this sentence: {item['example']}, what is the meaning of the word: {item['expression']}?",
+                    "query": f"In the sentence: {item['example']} What is the meaning of the word: {item['expression']}?",
                     "pos": positive_data,
                     "neg": negative_data,
                     "prompt": prompt,
@@ -180,9 +180,9 @@ def gen_validation_data_set_from_distil_data(input_path: str, output_path: str):
 
 if __name__ == "__main__":
     try:
-        # main()
-        input_path = "data/gse_train_data/data/training_data_all_distill.jsonl"
-        output_path = "data/gse_train_data/data/validation_data.jsonl"
-        gen_validation_data_set_from_distil_data(input_path, output_path)
+        main()
+        # input_path = "data/gse_train_data/data/training_data_all_distill.jsonl"
+        # output_path = "data/gse_train_data/data/validation_data.jsonl"
+        # gen_validation_data_set_from_distil_data(input_path, output_path)
     except Exception as e:
         print(f"Error: {e}")
