@@ -51,11 +51,11 @@ def find_soft_negative(item: Dict, data: List[Dict]) -> Dict:
             return other_item
     return None
 
-def generate_training_data(data: List[Dict], output_path1: str, output_path2: str):
+def generate_training_data(data: List[Dict], output_path1: str):
     """
     generate training data set with memory-efficient processing
     """
-    prompt = "Given an english sentence and a word, find the corresponding definition of the word."
+    prompt = "Given an english sentence and a word explanation, determine if the word explanation is correct or not."
     type = "symmetric_class"
     
     total_count = len(data)
@@ -83,16 +83,16 @@ def generate_training_data(data: List[Dict], output_path1: str, output_path2: st
             positive_data.append(f"The word {item['expression']} is a {item['grammaticalCategories']} and its definition is: {item['definition']}.")
 
             # Generate negative data - only get one at a time
-            negative_item = None
-            for _ in range(10):  # Limit attempts to find negative sample
-                candidate = random.choice(data)
-                if (candidate["itemId"] != item["itemId"] and 
-                    not contains_word(item["example"], candidate["expression"])):
-                    negative_item = candidate
-                    break
+            # negative_item = None
+            # for _ in range(10):  # Limit attempts to find negative sample
+            #     candidate = random.choice(data)
+            #     if (candidate["itemId"] != item["itemId"] and 
+            #         not contains_word(item["example"], candidate["expression"])):
+            #         negative_item = candidate
+            #         break
             
-            if negative_item:
-                negative_data.append(f"The word {negative_item['expression']} is a {negative_item['grammaticalCategories']} and its definition is: {negative_item['definition']}.")
+            # if negative_item:
+            #     negative_data.append(f"The word {negative_item['expression']} is a {negative_item['grammaticalCategories']} and its definition is: {negative_item['definition']}.")
             
             # Find soft negative - don't store full list
             soft_negative_item = find_soft_negative(item, data)
@@ -124,15 +124,15 @@ def generate_training_data(data: List[Dict], output_path1: str, output_path2: st
 
 def main():
     # input and output file path
-    input_path = "data/gse_data/data/vocabulary_data.jsonl"
-    output_path1 = "data/gse_train_data/data/training_data_all.jsonl"
-    output_path2 = "data/gse_train_data/data/training_data_complete.jsonl"
+    input_path = "dataset/gse_data/data/vocabulary_data.jsonl"
+    output_path1 = "dataset/gse_train_data/data/training_data_all.jsonl"
+    # output_path2 = "data/gse_train_data/data/training_data_complete.jsonl"
     
     # load data (limit 50 lines)
     data = load_jsonl(input_path)
     
     # generate two types of training data
-    generate_training_data(data, output_path1, output_path2)
+    generate_training_data(data, output_path1)
 
 def gen_validation_data_set_from_distil_data(input_path: str, output_path: str):
     """
